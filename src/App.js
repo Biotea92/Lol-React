@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
@@ -57,6 +57,14 @@ export default function ToggleColorMode() {
 const App = () => {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
+  const myRef = useRef({});
+
+  function doSomething() {
+    if(myRef.current.SearchInit != null){
+      myRef.current.SearchInit();
+    }
+    
+  }
 
   return (
     <Box
@@ -72,7 +80,7 @@ const App = () => {
             <Route path='/' element={<Home />} ></Route>
             <Route path='/about' element={<About />} />
             <Route path='/test' element={<Test />} />
-            <Route path="/:region/profile/:summonName" element={<Profile />}/>
+            <Route path="/kr/profile/:summonName" element={<Profile ref={myRef}/>}/>
             <Route path="/ranking" element={<RankingPage></RankingPage>} />
             <Route path="/duo" element={<DuoPage></DuoPage>} />
             <Route path="/statistics" element={<StatisticsPage></StatisticsPage>}/>
@@ -97,7 +105,10 @@ const App = () => {
             },}}
       size="small"
       aria-label="Brightness"
-      onClick={colorMode.toggleColorMode} 
+      onClick={() => {
+        doSomething();
+        colorMode.toggleColorMode();
+      }} 
       color="inherit">
         {theme.palette.mode === 'dark' ? <Brightness7Icon color='warning'/> : <Brightness4Icon />}
       </Fab>

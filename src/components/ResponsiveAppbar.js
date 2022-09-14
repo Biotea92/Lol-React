@@ -76,18 +76,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-function Form() {
+function Form({SearchInit}) {
   
   const navigate = useNavigate();
   const [value, setValue] = React.useState("")
 
   const handelInputChange = (e) => {
     const userValue = e.target.value;
-    if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
-      if(userValue.length > 8) {
-        return
-      }
-    }
+    // if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
+    //   if(userValue.length > 8) {
+    //     return
+    //   }
+    // }
     if(userValue.length > 16) {
       return
     }
@@ -100,6 +100,12 @@ function Form() {
     if(value === "") {
       return;
     }
+    
+    if(SearchInit != null){
+      SearchInit();
+    }
+    
+    
     navigate('/kr/profile/'+value);
   };
 
@@ -142,7 +148,7 @@ function Form() {
 
 
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = ({SearchInit}) => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -251,7 +257,7 @@ const ResponsiveAppBar = () => {
               </Button>
             ))}
           </Box>
-          <Form></Form>
+          <Form SearchInit={SearchInit}></Form>
         </Toolbar>
       </Container>
     </AppBar>

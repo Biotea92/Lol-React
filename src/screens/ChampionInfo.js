@@ -3,6 +3,7 @@ import { Box , Typography } from "@mui/material";
 import Container from '@mui/material/Container';
 import { useState , useEffect, Fragment} from 'react';
 import { styled , alpha} from '@mui/material/styles';
+import Profile from "./Profile"; 
 
 const AllChampion = () => {
     const [data, setData] = useState([{}]);
@@ -65,7 +66,7 @@ const AllChampion = () => {
 const StatisticsPage = () => {
     return (
         <Box>
-            <ResponsiveAppBar></ResponsiveAppBar>
+            <ResponsiveAppBar ></ResponsiveAppBar>
             <Container>
                 <Typography
                 variant="h3"

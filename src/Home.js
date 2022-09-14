@@ -56,11 +56,11 @@ function Form() {
   function handelInputChange(e) {
     const userValue = e.target.value;
 
-    if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
-      if(userValue.length > 8) {
-        return
-      }
-    }
+    // if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
+    //   if(userValue.length > 8) {
+    //     return
+    //   }
+    // }
     if(userValue.length > 16) {
       return
     }
