@@ -6,6 +6,7 @@ import React, {useState, useEffect} from "react";
 import Avatar from '@mui/material/Avatar';
 import { ResponsivePie } from '@nivo/pie';
 import { Stack } from "@mui/system";
+import { ResponsiveBar } from '@nivo/bar'
 
 
 
@@ -29,17 +30,12 @@ const RankingInfo = ({data,ranking}) => {
 
                 const chartData = [
                     {
-                        "id" : "wins",
-                        "label" : "wins",
-                        "value" : data.rankData.wins,
-                        "color" : "#0288d1"
-                    },
-                    {
-                        "id" : "losses",
-                        "label" : "losses",
-                        "value" : data.rankData.losses,
-                        "color" : "#ff1744"
-                    },
+                        "country": "횟수",
+                        "wins" : data.rankData.wins,
+                        "winsColor" : "hsl(85, 70%, 50%)",
+                        "losses" : data.rankData.losses,
+                        "lossesColor" : "hsl(51, 70%, 50%)"
+                    }
                 ]
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:"#f5f5f5"}}>
@@ -75,24 +71,40 @@ const RankingInfo = ({data,ranking}) => {
                         position={"absolute"}
                         right="0"
                         sx={{ml:5, width:250, height: 50}}>
-                            <ResponsivePie
+                            <ResponsiveBar
                                 data={chartData}
-                                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                                activeOuterRadiusOffset={8}
+                                keys={[
+                                    'wins',
+                                    'losses'
+                                ]}
+                                indexBy="country"
+                                margin={{ top: 0, right: 50, bottom: 10, left: 0 }}
+                                padding={0}
+                                layout="horizontal"
+                                valueScale={{ type: 'linear' }}
+                                indexScale={{ type: 'band', round: true }}
                                 colors={{ scheme: 'category10' }}
-                                borderColor="black"
-                                arcLinkLabelsSkipAngle={10}
-                                arcLinkLabelsTextOffset={2}
-                                arcLinkLabelsTextColor="#333333"
-                                arcLinkLabelsOffset={6}
-                                arcLinkLabelsStraightLength={0}
-                                arcLinkLabelsThickness={0}
-                                arcLinkLabelsColor="black"
-                                arcLabel="value"
-                                arcLabelsRadiusOffset={0.55}
-                                arcLabelsSkipAngle={10}
-                                arcLabelsTextColor="black"
+                                borderColor={{
+                                    from: 'color',
+                                    modifiers: [
+                                        [
+                                            'darker',
+                                            1.6
+                                        ]
+                                    ]
+                                }}
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={null}
+                                axisLeft={null}
+                                labelSkipWidth={12}
+                                labelSkipHeight={12}
+                                labelTextColor="black"
+                                legends={[]}
                                 isInteractive={true}
+                                role="application"
+                                ariaLabel="승률"
+                                barAriaLabel={function(e){return e.id+": "+e.formattedValue+" in country: "+e.indexValue}}
                             />
                         </Box>
                     </StyledBox>
@@ -109,19 +121,13 @@ const RankingInfo = ({data,ranking}) => {
                 const chartData = []
                 if(data.rankData !== undefined) {
                     chartData.push({
-                        "id" : "wins",
-                        "label" : "wins",
-                        "value" : data.rankData.wins,
-                        "color" : "#0288d1"
-                    });
-                    chartData.push({
-                        "id" : "losses",
-                        "label" : "losses",
-                        "value" : data.rankData.losses,
-                        "color" : "#ff1744"
+                        "country": "횟수",
+                        "wins" : data.rankData.wins,
+                        "winsColor" : "hsl(85, 70%, 50%)",
+                        "losses" : data.rankData.losses,
+                        "lossesColor" : "hsl(51, 70%, 50%)"
                     });
                 }
-                
 
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:"#f5f5f5"}}>
@@ -159,24 +165,40 @@ const RankingInfo = ({data,ranking}) => {
                                 position={"absolute"}
                                 right="0"
                                 sx={{ml:5, width:250, height: 50}}>
-                                    <ResponsivePie
+                                    <ResponsiveBar
                                         data={chartData}
-                                        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-                                        activeOuterRadiusOffset={8}
+                                        keys={[
+                                            'wins',
+                                            'losses'
+                                        ]}
+                                        indexBy="country"
+                                        margin={{ top: 0, right: 50, bottom: 10, left: 0 }}
+                                        padding={0}
+                                        layout="horizontal"
+                                        valueScale={{ type: 'linear' }}
+                                        indexScale={{ type: 'band', round: true }}
                                         colors={{ scheme: 'category10' }}
-                                        borderColor="black"
-                                        arcLinkLabelsSkipAngle={10}
-                                        arcLinkLabelsTextOffset={2}
-                                        arcLinkLabelsTextColor="#333333"
-                                        arcLinkLabelsOffset={6}
-                                        arcLinkLabelsStraightLength={0}
-                                        arcLinkLabelsThickness={0}
-                                        arcLinkLabelsColor="black"
-                                        arcLabel="value"
-                                        arcLabelsRadiusOffset={0.55}
-                                        arcLabelsSkipAngle={10}
-                                        arcLabelsTextColor="black"
+                                        borderColor={{
+                                            from: 'color',
+                                            modifiers: [
+                                                [
+                                                    'darker',
+                                                    1.6
+                                                ]
+                                            ]
+                                        }}
+                                        axisTop={null}
+                                        axisRight={null}
+                                        axisBottom={null}
+                                        axisLeft={null}
+                                        labelSkipWidth={12}
+                                        labelSkipHeight={12}
+                                        labelTextColor="black"
+                                        legends={[]}
                                         isInteractive={true}
+                                        role="application"
+                                        ariaLabel="승률"
+                                        barAriaLabel={function(e){return e.id+": "+e.formattedValue+" in country: "+e.indexValue}}
                                     />
                                 </Box>
                             </>
@@ -199,8 +221,6 @@ const RankingInfo = ({data,ranking}) => {
             })
         }
     }
-
-    
     
     return (
         <Box>
@@ -237,18 +257,29 @@ const RankingPage = () => {
                 <Stack direction="row">
                     <Typography
                     variant="h4"
-                    sx={{ mt :3, mb:3, ml:3}}
+                    component="a"
+                    sx={{ mt :3, mb:3, ml:3,textDecoration:"none"}}
                     fontWeight={ranking === "티어랭킹" ? "bold" : "normal"}
-                    color={ranking === "티어랭킹" ? "" : "#9e9e9e"}
-                    onClick={() => setRanking("티어랭킹")}>
+                    color={ranking === "티어랭킹" ? "inherit" : "#9e9e9e"}
+                    href='#'
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setRanking("티어랭킹")
+                        
+                    }}>
                         티어랭킹
                     </Typography>
                     <Typography
                     variant="h4"
-                    sx={{ mt :3, mb:3, ml:3}}
+                    component="a"
+                    sx={{ mt :3, mb:3, ml:3, textDecoration:"none"}}
                     fontWeight={ranking === "인기랭킹" ? "bold" : "normal"}
-                    color={ranking === "인기랭킹" ? "" : "#9e9e9e"}
-                    onClick={() => setRanking("인기랭킹")}>
+                    color={ranking === "인기랭킹" ? "inherit" : "#9e9e9e"}
+                    href='#'
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setRanking("인기랭킹")
+                    }}>
                         인기랭킹
                     </Typography>
                 </Stack>

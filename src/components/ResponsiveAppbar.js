@@ -76,18 +76,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-function Form({SearchInit}) {
+function Form({SearchInit,setGameCatecory}) {
   
   const navigate = useNavigate();
   const [value, setValue] = React.useState("")
 
   const handelInputChange = (e) => {
     const userValue = e.target.value;
-    // if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
-    //   if(userValue.length > 8) {
-    //     return
-    //   }
-    // }
+    
     if(userValue.length > 16) {
       return
     }
@@ -104,7 +100,9 @@ function Form({SearchInit}) {
     if(SearchInit != null){
       SearchInit();
     }
-    
+    if(setGameCatecory !== undefined) {
+      setGameCatecory("모든게임");
+    }
     
     navigate('/kr/profile/'+value);
   };
@@ -148,7 +146,7 @@ function Form({SearchInit}) {
 
 
 
-const ResponsiveAppBar = ({SearchInit}) => {
+const ResponsiveAppBar = ({SearchInit, setGameCatecory}) => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
@@ -257,7 +255,7 @@ const ResponsiveAppBar = ({SearchInit}) => {
               </Button>
             ))}
           </Box>
-          <Form SearchInit={SearchInit}></Form>
+          <Form SearchInit={SearchInit} setGameCatecory={setGameCatecory}></Form>
         </Toolbar>
       </Container>
     </AppBar>

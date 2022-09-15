@@ -48,22 +48,22 @@ export default function ToggleColorMode() {
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
-        <App />
+        <App mode={mode}/>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
 }
 
-const App = () => {
+const App = ({mode}) => {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   const myRef = useRef({});
 
   function doSomething() {
-    if(myRef.current.SearchInit != null){
+    
+    if(myRef.current.SearchInit !== undefined){
       myRef.current.SearchInit();
     }
-    
   }
 
   return (
@@ -77,7 +77,7 @@ const App = () => {
     }}>
       <BrowserRouter>
         <Routes>
-            <Route path='/' element={<Home />} ></Route>
+            <Route path='/' element={<Home mode={mode}/>} ></Route>
             <Route path='/about' element={<About />} />
             <Route path='/test' element={<Test />} />
             <Route path="/kr/profile/:summonName" element={<Profile ref={myRef}/>}/>

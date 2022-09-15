@@ -56,11 +56,6 @@ function Form() {
   function handelInputChange(e) {
     const userValue = e.target.value;
 
-    // if(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/i.test(userValue)) {
-    //   if(userValue.length > 8) {
-    //     return
-    //   }
-    // }
     if(userValue.length > 16) {
       return
     }
@@ -81,7 +76,7 @@ function Form() {
   
 
   return (
-    <Box textAlign="center" mt={{ xs: 1, sm: 3 ,md :5}}>
+    <Box textAlign="center" mt={{ xs: 0, sm: 0 ,md :0}}>
       <Search>
         <form onSubmit={handleFormSubmit}>
             <TextField 
@@ -223,11 +218,22 @@ const FreeRotationChampion = () => {
   );
 };
 
-const Home = () => {
+const Home = ({mode}) => {
   return (
     <Box>
       <Container fixed> 
           <FloatingBar/>
+          <Box width={"100%"} height={250} textAlign="center">
+            <img
+            color='inherit'
+            width={750}
+            alt='logo' 
+            src={mode === "light" 
+            ? 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Flogo.png?alt=media&token=70a4778a-9d01-4c73-941e-ca7109695c39'
+            : 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2FlogoWhite.png?alt=media&token=3ecfb52e-072b-4360-82a4-73e3c0fe44c5'
+            }>
+            </img>
+          </Box>
           <Form />
           <FreeRotationChampion />
       </Container>
