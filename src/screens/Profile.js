@@ -28,7 +28,7 @@ import Paper from '@mui/material/Paper';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
 import { ResponsiveBullet } from '@nivo/bullet'
-import { display } from "@mui/system";
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const winColor = "#EAF3FD";
 const looseColor = "#FEEEED";
@@ -951,7 +951,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:winColor}} id={data.matchId} 
                     onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.blue.puuid, data.blue.puuid );
+                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.bluePuuid, data.redPuuid );
                         isShowTimeLine[index] = !isShowTimeLine[index]
                         setIsShowTimeLine(isShowTimeLine)
                     }}> 
@@ -1158,7 +1158,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:looseColor}} id={data.matchId} 
                     onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.blue.puuid, data.blue.puuid  );
+                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.bluePuuid, data.redPuuid   );
                         isShowTimeLine[index] = !isShowTimeLine[index]
                         setIsShowTimeLine(isShowTimeLine)
                     }}> 
@@ -1365,7 +1365,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:resetColor}} id={data.matchId} 
                         onClick={(e) => {
-                            ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.blue.puuid, data.blue.puuid );
+                            ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.bluePuuid, data.redPuuid  );
                             isShowTimeLine[index] = !isShowTimeLine[index]
                             setIsShowTimeLine(isShowTimeLine)
                         }}>
@@ -1594,8 +1594,6 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
             }else{
                 tableData = red;
             }
-
-            console.log(tableData);
 
             return (
                 <TableContainer component={Paper} sx={{width:'99%'}}>
@@ -1846,22 +1844,97 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
         const ChangeButtonGroup = () => {
 
             return(
-                <Box sx={{width:'99%', textAlign:"center"}}>
-                    <Button
-                    onClick={() => {
-                        document.getElementById(`${matchId}timeLine1`).style.display ="block";
-                        document.getElementById(`${matchId}timeLine2`).style.display ="none";
-                    }}
-                    >개요
-                    </Button>
-                    <Button
-                    onClick={() => {
-                        document.getElementById(`${matchId}timeLine1`).style.display ="none";
-                        document.getElementById(`${matchId}timeLine2`).style.display ="block";
-                    }}
-                    >빌드
-                    </Button>
+                <Box mt={1} mb={1} sx={{width:'99%', textAlign:"center"}}>
+                    <ButtonGroup variant="outlined" color="inherit" size="large">
+                        <Button
+                        onClick={() => {
+                            document.getElementById(`${matchId}timeLine1`).style.display ="block";
+                            document.getElementById(`${matchId}timeLine2`).style.display ="none";
+                        }}
+                        >개요
+                        </Button>
+                        <Button
+                        onClick={() => {
+                            document.getElementById(`${matchId}timeLine1`).style.display ="none";
+                            document.getElementById(`${matchId}timeLine2`).style.display ="block";
+                        }}
+                        >빌드
+                        </Button>
+                    </ButtonGroup>
                 </Box>
+            );
+        }
+
+        const Build = () => {
+            const itemBuildkey = [];
+            const itemBuildList = [];
+
+            for(const key in itemBuild) {
+                itemBuildkey.push(key);
+                itemBuildList.push(itemBuild[key]);
+            }
+            
+            const Item = () => {
+
+                return (
+                    itemBuildList.map((data, index1) => {
+
+                        return (
+                            <Box key={index1} sx={{display:"inline"}}>
+                                {
+                                    data.map((data1, index2) => {
+                                        if(data1.type === "구매" ) {
+                                            return (
+                                                <Box key={index2} position={"relative"} sx={{display:"inline"}} ml={1}>
+                                                    <Typography fontWeight={"bold"} color="white" position={"absolute"} right={0} bottom={0} sx={{display:"inline", ml:{},mr:{}}}>
+                                                        {itemBuildkey[index1]}분
+                                                    </Typography>
+                                                    <Tooltip title={data1.itemName} sx={{display:"inline"}} arrow>
+                                                        <img alt={data1.itemName} src={data1.itemImg} sx={{width:20, height:20}}/>
+                                                    </Tooltip>
+                                                </Box>
+                                            )
+                                        }    
+                                    })
+                                }
+                            </Box>
+                        )
+                    })
+                    
+                );
+            }
+
+            const Skill = () => {
+                console.log(skillBuild);
+                return(
+                    <Box>
+                        {
+                            skillBuild.map((data, index) => {
+
+                                return (
+                                    <Box key={index} position={"relative"} sx={{display:"inline"}} ml={1}>
+                                        <Typography fontWeight={"bold"} color="white" position={"absolute"} right={2} bottom={2} sx={{display:"inline", ml:{},mr:{}}}>
+                                            {data.skillSlot === 1 ? "q" : data.skillSlot === 2 ? "w" : data.skillSlot === 3 ? "e" : data.skillSlot === 4 ? "r" : null}
+                                        </Typography>
+                                        <Tooltip key={index} title={"하이"}>
+                                            <img alt={data.skillSlot} src={data.skillImg} sx={{width:20, height:20}}/>
+                                        </Tooltip>
+                                    </Box>
+                                );
+                            })
+                        }
+                    </Box>
+                );
+            }
+            
+            
+            return (
+                <Paper elevation={12}  square={true} sx={{width:'99%'}} >
+                    <Typography fontWeight={"bold"} variant={"h5"}>아이템 빌드</Typography>
+                    <Item></Item>
+                    <Typography fontWeight={"bold"} variant={"h5"}>스킬 빌드</Typography>
+                    <Skill></Skill>
+                </Paper>
             );
         }
 
@@ -1878,7 +1951,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                             <BasicTable team={"red"}/>
                         </div>
                         <div style={{display:"none"}} id={`${matchId}timeLine2`}>
-                            빌드
+                            <Build></Build>
                         </div>
                     </React.Fragment>
                         
@@ -1890,7 +1963,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                             <BasicTable team={"blue"}/>
                         </div>
                         <div style={{display:"none"}} id={`${matchId}timeLine2`}>
-                            빌드
+                            <Build></Build>
                         </div>
                     </React.Fragment>
                        
