@@ -18,7 +18,6 @@ import InputBase from '@mui/material/InputBase';
 const pages = [
   {"title" : '홈', "link": "/"}, 
   {"title" : '랭킹', "link" : "/ranking"}, 
-  {"title" : '듀오찾기', "link" : "/duo"},
   {"title" : '통계', "link" : "/statistics"},
   {"title" : '챔피언정보', "link" : "/championInfo"}
 ];

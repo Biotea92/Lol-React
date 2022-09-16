@@ -27,6 +27,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
+import { ResponsiveBullet } from '@nivo/bullet'
+import { display } from "@mui/system";
 
 const winColor = "#EAF3FD";
 const looseColor = "#FEEEED";
@@ -949,7 +951,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:winColor}} id={data.matchId} 
                     onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team);
+                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.blue.puuid, data.blue.puuid );
                         isShowTimeLine[index] = !isShowTimeLine[index]
                         setIsShowTimeLine(isShowTimeLine)
                     }}> 
@@ -1156,7 +1158,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:looseColor}} id={data.matchId} 
                     onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team);
+                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.blue.puuid, data.blue.puuid  );
                         isShowTimeLine[index] = !isShowTimeLine[index]
                         setIsShowTimeLine(isShowTimeLine)
                     }}> 
@@ -1363,7 +1365,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                 return (
                     <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:resetColor}} id={data.matchId} 
                         onClick={(e) => {
-                            ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team);
+                            ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.blue.puuid, data.blue.puuid );
                             isShowTimeLine[index] = !isShowTimeLine[index]
                             setIsShowTimeLine(isShowTimeLine)
                         }}>
@@ -1533,8 +1535,9 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
     }
 }
 
-async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTeam) {
+async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTeam , win, bluePuuid, redPuuid) {
     
+
     const newNode = document.createElement('div');
     newNode.className='timeLine';
     const selected = document.getElementById(matchId);
@@ -1545,8 +1548,28 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
     if (!isShowTimeLine) {
         parent.children[index].insertAdjacentElement('afterend', newNode)
 
-        const url = '/api/timeLine?matchId='+matchId+'&puuid='+puuid+'&championId='+championId;
+
+        let url = '/api/timeLine?matchId='+matchId+'&puuid='+puuid+'&championId='+championId;
         
+        if(win){
+            if(targetTeam === "blue") {
+                url += `&winPuuid1=${bluePuuid[0]}&winPuuid2=${bluePuuid[1]}&winPuuid3=${bluePuuid[2]}&winPuuid4=${bluePuuid[3]}&winPuuid5=${bluePuuid[4]}`;
+                url += `&losePuuid1=${redPuuid[0]}&losePuuid2=${redPuuid[1]}&losePuuid3=${redPuuid[2]}&losePuuid4=${redPuuid[3]}&losePuuid5=${redPuuid[4]}`;
+            }else{
+                url += `&winPuuid1=${redPuuid[0]}&winPuuid2=${redPuuid[1]}&winPuuid3=${redPuuid[2]}&winPuuid4=${redPuuid[3]}&winPuuid5=${redPuuid[4]}`;
+                url += `&losePuuid1=${bluePuuid[0]}&losePuuid2=${bluePuuid[1]}&losePuuid3=${bluePuuid[2]}&losePuuid4=${bluePuuid[3]}&losePuuid5=${bluePuuid[4]}`;
+            }
+        }else{
+            if(targetTeam === "blue") {
+                url += `&winPuuid1=${redPuuid[0]}&winPuuid2=${redPuuid[1]}&winPuuid3=${redPuuid[2]}&winPuuid4=${redPuuid[3]}&winPuuid5=${redPuuid[4]}`;
+                url += `&losePuuid1=${bluePuuid[0]}&losePuuid2=${bluePuuid[1]}&losePuuid3=${bluePuuid[2]}&losePuuid4=${bluePuuid[3]}&losePuuid5=${bluePuuid[4]}`;
+            }else{
+                url += `&winPuuid1=${bluePuuid[0]}&winPuuid2=${bluePuuid[1]}&winPuuid3=${bluePuuid[2]}&winPuuid4=${bluePuuid[3]}&winPuuid5=${bluePuuid[4]}`;
+                url += `&losePuuid1=${redPuuid[0]}&losePuuid2=${redPuuid[1]}&losePuuid3=${redPuuid[2]}&losePuuid4=${redPuuid[3]}&losePuuid5=${redPuuid[4]}`;
+            }
+        }
+
+        console.log(url);
         const timeLineData = await fetch(url).then(response => response.json());
 
         console.log(timeLineData);
@@ -1558,6 +1581,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
         const blueTotal = timeLineData.matchInfo.blueTotal;
         const redTotal = timeLineData.matchInfo.redTotal;
         const winTeam = timeLineData.matchInfo.win;
+        const maxDamage = timeLineData.matchInfo.maxDamage
 
         const grayImg = "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2FgrayImg.png?alt=media&token=9fb66610-ab1c-4617-80f1-3d774feb4b9d";
         
@@ -1585,8 +1609,19 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                                 <TableCell align="center">아이템</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody sx={{ color : "black", backgroundColor: winTeam === team ? winColor: looseColor  }}>
-                        {tableData.map((data, index) => (
+                        <TableBody sx={{ color : "black", backgroundColor: winTeam === team ? winColor: looseColor }}>
+                        {tableData.map((data, index) => {
+                            
+                            const chartData = [
+                                {
+                                    "id" : "",
+                                    "ranges" :[0, maxDamage],
+                                    "measures" : [0,1,data.totalDamageDealtToChampions],
+                                    "markers": [100]
+                                }
+                            ]
+
+                            return (
                             <TableRow
                             key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
@@ -1646,7 +1681,35 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                                         </Typography>
                                     </Stack>
                                 </TableCell>
-                                <TableCell align="center">dddddddddddddddddd</TableCell>
+                                <TableCell align="center" >
+                                    <Tooltip title={"챔피언에게 가한 피해량"+data.totalDamageDealtToChampions}>
+                                        <Typography 
+                                            variant="h6"
+                                            color="gray"
+                                            component="span"
+                                            fontSize={11}
+                                            sx={{ mt:0.1}}>
+                                                {data.totalDamageDealtToChampions}
+                                        </Typography>
+                                    </Tooltip>
+                                    <Box height={30} width={200} textAlign="center">
+                                        <ResponsiveBullet
+                                            data={chartData}
+                                            margin={{ top: 0, right: 0, bottom: 0, left: 50 }}
+                                            spacing={0}
+                                            titleAlign="start"
+                                            titleOffsetX={6}
+                                            titleOffsetY={3}
+                                            rangeBorderColor="black"
+                                            measureBorderColor={{ theme: 'background' }}
+                                            measureSize={1}
+                                            markerSize={0}
+                                            rangeColors="greys"
+                                            measureColors="red_yellow_blue"
+                                            markerColors="seq:warm"
+                                        />
+                                    </Box>
+                                </TableCell>
                                 <TableCell align="center">
                                     <Tooltip title={"제어와드:"+data.visionWardsBoughtInGame+"\n와드설치:"+data.wardsPlaced+"\n와드제거:"+data.wardsKilled} 
                                     arrow>
@@ -1682,28 +1745,155 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                                     </Stack>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )})}
                         </TableBody>
                     </Table>
                 </TableContainer>
             );
-            
-            
         }
 
+        const Total = ({team}) => {
+
+            return (
+                <TableContainer component={Paper} sx={{width:'99%'}}>
+                    <Table sx={{ minWidth: 650 ,}} aria-label="simple table">
+                        <TableHead sx={{backgroundColor: resetColor}}>
+                            <TableRow>
+                                <TableCell align="center">
+                                    <Typography color={team === winTeam  ? "blue" : "red"}>{team === winTeam ? "승리": "패배"} {team}</Typography> 
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team === "red" ? "타워제거 " + redTotal.tower : "타워제거 " + blueTotal.tower} arrow>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team === winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-tower.svg?alt=media&token=d10fe99c-4100-4058-b352-2ab7fd89a65a" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-tower-r.svg?alt=media&token=6bb948e0-2a44-452c-94ed-05b96ea2f204"} 
+                                            alt={team === winTeam ? "승리팀타워": "패배팀타워"}>
+                                            </img>
+                                            <Typography>{team === "red" ? redTotal.tower : blueTotal.tower}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team === "red" ? "바론사냥 " + redTotal.baron : "바론사냥 " + blueTotal.baron}>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team === winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-baron.svg?alt=media&token=1fa58b0c-38ab-4d72-9273-a76f7cb3cf36" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-baron-r.svg?alt=media&token=1499844f-a81b-46c7-9c80-9513f75f3692"} 
+                                            alt={team === winTeam ? "승리팀바론": "패배팀바론"}>
+                                            </img>
+                                            <Typography>{team === "red" ? redTotal.baron : blueTotal.baron}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team === "red" ? "드레곤사냥 " + redTotal.dragon : "드레곤사냥 " + blueTotal.dragon} arrow>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team === winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-dragon.svg?alt=media&token=70141824-fa70-4fa9-970e-5837e91caa58" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-dragon-r.svg?alt=media&token=c4dfcde6-0e7e-466b-8f99-edcf2e0e6db0"} 
+                                            alt={team === winTeam ? "승리팀드레곤": "패배팀드레곤"}>
+                                            </img>
+                                            <Typography>{team === "red" ? redTotal.dragon : blueTotal.dragon}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team === "red" ? "킬 " + redTotal.kills : "킬  " + blueTotal.kills} arrow>
+                                        <Typography fontWeight={"bold"}>{team === "red" ? redTotal.kills : blueTotal.kills}</Typography>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">VS</TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team !== "red" ? "킬  " + redTotal.kills : "킬  " + blueTotal.kills} arrow>
+                                        <Typography fontWeight={"bold"}>{team !== "red" ? redTotal.kills : blueTotal.kills}</Typography>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team !== "red" ? "드레곤사냥 " + redTotal.dragon : "드레곤사냥 " + blueTotal.dragon} arrow>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team !== winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-dragon.svg?alt=media&token=70141824-fa70-4fa9-970e-5837e91caa58" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-dragon-r.svg?alt=media&token=c4dfcde6-0e7e-466b-8f99-edcf2e0e6db0"} 
+                                            alt={team !== winTeam ? "승리팀드레곤": "패배팀드레곤"}>
+                                            </img>
+                                            <Typography>{team !== "red" ? redTotal.dragon : blueTotal.dragon}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team !== "red" ? "바론사냥 " + redTotal.baron : "바론사냥 " + blueTotal.baron}>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team !== winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-baron.svg?alt=media&token=1fa58b0c-38ab-4d72-9273-a76f7cb3cf36" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-baron-r.svg?alt=media&token=1499844f-a81b-46c7-9c80-9513f75f3692"} 
+                                            alt={team !== winTeam ? "승리팀바론": "패배팀바론"}>
+                                            </img>
+                                            <Typography>{team !== "red" ? redTotal.baron : blueTotal.baron}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title={team !== "red" ? "타워제거 " + redTotal.tower : "타워제거 " + blueTotal.tower} arrow>
+                                        <Stack direction={"row"} spacing={1}>
+                                            <img src={team !== winTeam ? "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-tower.svg?alt=media&token=d10fe99c-4100-4058-b352-2ab7fd89a65a" : "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fsvg%2Ficon-tower-r.svg?alt=media&token=6bb948e0-2a44-452c-94ed-05b96ea2f204"} 
+                                            alt={team !== winTeam ? "승리팀타워": "패배팀타워"}>
+                                            </img>
+                                            <Typography>{team !== "red" ? redTotal.tower : blueTotal.tower}</Typography>
+                                        </Stack>
+                                    </Tooltip>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Typography color={team !== winTeam ? "blue" : "red"}>{team !== winTeam ? "승리": "패배"} {team === "blue" ? "red" : "blue"}</Typography> 
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                    </Table>
+                </TableContainer>
+            );
+        }
         
+        const ChangeButtonGroup = () => {
+
+            return(
+                <Box sx={{width:'99%', textAlign:"center"}}>
+                    <Button
+                    onClick={() => {
+                        document.getElementById(`${matchId}timeLine1`).style.display ="block";
+                        document.getElementById(`${matchId}timeLine2`).style.display ="none";
+                    }}
+                    >개요
+                    </Button>
+                    <Button
+                    onClick={() => {
+                        document.getElementById(`${matchId}timeLine1`).style.display ="none";
+                        document.getElementById(`${matchId}timeLine2`).style.display ="block";
+                    }}
+                    >빌드
+                    </Button>
+                </Box>
+            );
+        }
+
         const root = ReactDOM.createRoot(parent.children[index+1]);
         root.render(
             <Box>
+                <ChangeButtonGroup></ChangeButtonGroup>
                 {targetTeam === "blue"
-                 ?  <React.Fragment>
-                        <BasicTable team={"blue"}/>
-                        <BasicTable team={"red"}/>
+                 ?  
+                    <React.Fragment >
+                        <div style={{display:"block"}} id={`${matchId}timeLine1`}>
+                            <BasicTable team={"blue"}/>
+                            <Total team={"blue"} ></Total>
+                            <BasicTable team={"red"}/>
+                        </div>
+                        <div style={{display:"none"}} id={`${matchId}timeLine2`}>
+                            빌드
+                        </div>
                     </React.Fragment>
-                :   <React.Fragment>
-                        <BasicTable team={"red"}/>
-                        <BasicTable team={"blue"}/>
+                        
+                :   
+                    <React.Fragment >
+                        <div style={{display:"block"}} id={`${matchId}timeLine1`}>
+                            <BasicTable team={"red"}/>
+                            <Total team={"red"}></Total>
+                            <BasicTable team={"blue"}/>
+                        </div>
+                        <div style={{display:"none"}} id={`${matchId}timeLine2`}>
+                            빌드
+                        </div>
                     </React.Fragment>
+                       
                 }
                 
             </Box>
@@ -1713,7 +1903,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
     }
 }
 
-const SummonerInfo = ({data, setData, SearchInit}) => {
+const SummonerInfo = ({data, setData, SearchInit, setCopyData}) => {
     
     
     const [rank , setRank] = useState("솔로랭크"); 
@@ -1839,6 +2029,7 @@ const SummonerInfo = ({data, setData, SearchInit}) => {
                 .then(response => response.json())
                 .then(data => {
                 setData(data);
+                setCopyData({...data});
             }).catch(err => console.log(err));
             
             setSuccess(true);
@@ -1941,12 +2132,12 @@ const Profile = forwardRef((props, ref) => {
                 <ResponsiveAppBar SearchInit={SearchInit} setGameCatecory={setGameCatecory}/>
                 {data.user !== null
                 ?   <Container>
-                        <SummonerInfo data={data} setData={setData} summonName={summonName} SearchInit={SearchInit}/>
+                        <SummonerInfo data={data} setData={setData} summonName={summonName} SearchInit={SearchInit} setCopyData={setCopyData}/>
                         
                         <MatchCatecory copyData={copyData} setData={setData} SearchInit={SearchInit} data={data} gameCatecory={gameCatecory} setGameCatecory={setGameCatecory}/>
 
                         {data.info.length !== 0
-                           ? <MatchList data={data} isShowTimeLine={isShowTimeLine} setIsShowTimeLine={setIsShowTimeLine}/>
+                           ? <MatchList data={data} isShowTimeLine={isShowTimeLine} setIsShowTimeLine={setIsShowTimeLine} />
                            : null
                         }
                     

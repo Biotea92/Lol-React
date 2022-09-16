@@ -12,7 +12,6 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const pages = [
   {"title" : '랭킹', "link" : "/ranking"}, 
-  {"title" : '듀오찾기', "link" : "/duo"},
   {"title" : '통계', "link" : "/statistics"},
   {"title" : '챔피언정보', "link" : "/championInfo"}
 ];

@@ -5,7 +5,6 @@ import About from './About';
 import Test from './Test';
 import Profile from './screens/Profile';
 import RankingPage from './screens/Ranking';
-import DuoPage from './screens/Duo';
 import StatisticsPage from './screens/Statistics';
 import Box from '@mui/material/Box';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
@@ -82,7 +81,6 @@ const App = ({mode}) => {
             <Route path='/test' element={<Test />} />
             <Route path="/kr/profile/:summonName" element={<Profile ref={myRef}/>}/>
             <Route path="/ranking" element={<RankingPage></RankingPage>} />
-            <Route path="/duo" element={<DuoPage></DuoPage>} />
             <Route path="/statistics" element={<StatisticsPage></StatisticsPage>}/>
             <Route path="/championInfo" element={<ChampionInfo></ChampionInfo>}/>
             <Route path="/*" element={<h1>존재하지 않는 페이지입니다.</h1>} />
