@@ -1,11 +1,10 @@
 import React, { useRef } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './Home';
-import About from './About';
-import Test from './Test';
 import Profile from './screens/Profile';
 import RankingPage from './screens/Ranking';
 import StatisticsPage from './screens/Statistics';
+import ChampionDetailPage from './screens/ChampionDetail';
 import Box from '@mui/material/Box';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -77,12 +76,11 @@ const App = ({mode}) => {
       <BrowserRouter>
         <Routes>
             <Route path='/' element={<Home mode={mode}/>} ></Route>
-            <Route path='/about' element={<About />} />
-            <Route path='/test' element={<Test />} />
             <Route path="/kr/profile/:summonName" element={<Profile ref={myRef}/>}/>
             <Route path="/ranking" element={<RankingPage></RankingPage>} />
             <Route path="/statistics" element={<StatisticsPage></StatisticsPage>}/>
             <Route path="/championInfo" element={<ChampionInfo></ChampionInfo>}/>
+            <Route path="/championDetail/:championId" element={<ChampionDetailPage></ChampionDetailPage>}/>
             <Route path="/*" element={<h1>존재하지 않는 페이지입니다.</h1>} />
         </Routes>
       </BrowserRouter>

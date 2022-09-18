@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const pages = [
   {"title" : '랭킹', "link" : "/ranking"}, 
@@ -52,7 +53,9 @@ function Form() {
   const navigate = useNavigate();
   const [value, setValue] = React.useState("")
 
-  function handelInputChange(e) {
+  const [autocompleteData, setautoCompleteData] = useState([]);
+
+  async function handelInputChange(e) {
     const userValue = e.target.value;
 
     if(userValue.length > 16) {
@@ -60,51 +63,73 @@ function Form() {
     }
 
     setValue(userValue);
+
+    const url = `/api/nameSearch?keyWord=${userValue}`;
+    const responseJSON = await fetch(url).then(response => response.json())
+
+    const userList = []
+
+    for(let i = 0; i < responseJSON.length; i++) {
+      userList.push({"title" : responseJSON[i]});
+    }
+
+    setautoCompleteData(userList);
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     
     if(value === "") {
+      setautoCompleteData([])
       return;
     }
     
     navigate('/kr/profile/'+value);
   };
 
-  
-
   return (
     <Box textAlign="center" mt={{ xs: 0, sm: 0 ,md :0}}>
       <Search>
         <form onSubmit={handleFormSubmit}>
-            <TextField 
-            autoComplete="off"
-            type="text" 
-            variant="outlined"
-            placeholder=''
-            value={value} 
-            onChange={handelInputChange}
-            sx={{
-              width:{xs: "80%",sm: "70%", md:"60%"},
-              size:"small"
-            }}
+          <Autocomplete
+            freeSolo
+            disableClearable
+            options={autocompleteData.map((option) => option.title)}
+            renderInput={(params) => (
+              <Fragment>
+                <TextField
+                  {...params}
+                  autoComplete="off"
+                  type="text" 
+                  variant="outlined"
+                  placeholder=''
+                  value={value} 
+                  onChange={handelInputChange}
+                  sx={{
+                    width:{xs: "80%",sm: "70%", md:"60%"},
+                    size:"small"
+                  }}
+                />
+                <Button 
+                variant='outlined'
+                type="submit"
+                color="inherit"
+                size='large'
+                sx={{
+                  height: "100%",
+                  position:"absolute",
+                  right: {xs: "10%",sm: "15%", md:"20%"},
+                  display : { xs: "none",sm: "none" ,md: "inline"}
+                }}
+                >
+                  검색
+                </Button>
+              </Fragment>
+            )}
             >
-            </TextField> 
-            <Button 
-            variant='outlined'
-            type="submit"
-            color="inherit"
-            size='large'
-            sx={{
-              height: "100%",
-              position:"absolute",
-              right: {xs: "10%",sm: "15%", md:"20%"},
-              display : { xs: "none",sm: "none" ,md: "inline"}
-            }}
-            >
-              검색
-            </Button>
+            </Autocomplete>
+            
+            
             <IconButton
               size="large"
               onClick={handleFormSubmit}
@@ -125,6 +150,7 @@ function Form() {
 
 
 const FreeRotationChampion = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const ImgWrap = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -171,7 +197,7 @@ const FreeRotationChampion = () => {
     return data1.map((data, index) => {
       return (
         <Fragment key={index}>
-          <ImgWrap>
+          <ImgWrap onClick={() => navigate(`/championDetail/${data.champId}`)}>
             <Image src={data.champImg} alt={data.champName} />
             <ImgText>{data.champName}</ImgText>
           </ImgWrap>
@@ -218,23 +244,27 @@ const FreeRotationChampion = () => {
 };
 
 const Home = ({mode}) => {
+  const url = `url("https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Fmain%2FMy%20project-1%20(1).png?alt=media&token=4ba7d43d-ee97-4ad9-a954-ded950fd81bb")`
+
   return (
-    <Box>
+    <Box width={"100%"} >
       <Container fixed> 
-          <FloatingBar/>
-          <Box width={"100%"} height={250} textAlign="center">
-            <img
-            color='inherit'
-            width={750}
-            alt='logo' 
-            src={mode === "light" 
-            ? 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Flogo.png?alt=media&token=70a4778a-9d01-4c73-941e-ca7109695c39'
-            : 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2FlogoWhite.png?alt=media&token=3ecfb52e-072b-4360-82a4-73e3c0fe44c5'
-            }>
-            </img>
+          <Box width={"100%"} sx={{backgroundImage : url}}>
+            <FloatingBar/>
+            <Box width={"100%"} height={250} textAlign="center" >
+              <img
+              color='inherit'
+              width={750}
+              alt='logo' 
+              src={mode === "light" 
+              ? 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2Flogo.png?alt=media&token=70a4778a-9d01-4c73-941e-ca7109695c39'
+              : 'https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2FlogoWhite.png?alt=media&token=3ecfb52e-072b-4360-82a4-73e3c0fe44c5'
+              }>
+              </img>
+            </Box>
+            <Form />
+            <FreeRotationChampion />
           </Box>
-          <Form />
-          <FreeRotationChampion />
       </Container>
     </Box>  
   );

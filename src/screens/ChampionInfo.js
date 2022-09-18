@@ -2,11 +2,12 @@ import ResponsiveAppBar from "../components/ResponsiveAppbar";
 import { Box , Typography } from "@mui/material";
 import Container from '@mui/material/Container';
 import { useState , useEffect, Fragment} from 'react';
-import { styled , alpha} from '@mui/material/styles';
-import Profile from "./Profile"; 
+import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const AllChampion = () => {
     const [data, setData] = useState([{}]);
+    const navigate = useNavigate();
 
     const ImgWrap = styled('div')(({theme}) => ({
         display: 'inline',
@@ -42,13 +43,11 @@ const AllChampion = () => {
         return 0;
     })
 
-    console.log(data);
-
     const ListItem = () => {
     return data.map((data, index) => {
         return (
             <Fragment key={index}>
-                <ImgWrap>
+                <ImgWrap onClick={() => navigate(`/championDetail/${data.champId}`)}>
                     <Image src={data.champImg} alt={data.champKrName} />
                     <ImgText>{data.champKrName}</ImgText>
                 </ImgWrap>
@@ -66,13 +65,13 @@ const AllChampion = () => {
 const StatisticsPage = () => {
     return (
         <Box>
-            <ResponsiveAppBar ></ResponsiveAppBar>
+            <ResponsiveAppBar></ResponsiveAppBar>
             <Container>
                 <Typography
                 variant="h3"
-                component="h3"
-                sx={{textAlign:"center", mt :3, mb:3}}>
-                    챔피언 정보
+                fontWeight={"bold"}
+                sx={{mt :3, mb:3}}>
+                    챔피언
                 </Typography>
                 <AllChampion />
             </Container>

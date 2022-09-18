@@ -4,14 +4,14 @@ import { Box , Typography } from "@mui/material";
 import Container from '@mui/material/Container';
 import React, {useState, useEffect} from "react";
 import Avatar from '@mui/material/Avatar';
-import { ResponsivePie } from '@nivo/pie';
 import { Stack } from "@mui/system";
 import { ResponsiveBar } from '@nivo/bar'
+import { useNavigate } from 'react-router-dom';
 
 
 
-const RankingInfo = ({data,ranking}) => {
-
+const RankingInfo = ({data,ranking,navigate}) => {
+    
     const StyledBox = styled(Box)(({ theme }) => ({
         position: 'relative',
         display: 'flex',
@@ -24,6 +24,7 @@ const RankingInfo = ({data,ranking}) => {
     
     const TierRanking = () => {
         
+
         if(data != null) {
 
             return data.tierRanking.map((data, index) => {
@@ -55,7 +56,11 @@ const RankingInfo = ({data,ranking}) => {
                             color="black"
                             component="a"
                             sx={{textDecoration:"none"}}
-                            href={"/kr/profile/"+data.summonerName}>
+                            href={"#"}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate("/kr/profile/"+data.summonerName)
+                            }}>
                                 {data.summonerName}
                             </Typography>
                         </Box>
@@ -114,7 +119,6 @@ const RankingInfo = ({data,ranking}) => {
     }
 
     const HitRanking = () => {
-        
         if(data != null) {
 
             return data.hitRanking.map((data, index) => {
@@ -147,7 +151,11 @@ const RankingInfo = ({data,ranking}) => {
                             color="black"
                             component="a"
                             sx={{textDecoration:"none"}}
-                            href={"/kr/profile/"+data.summonerName}>
+                            href={"#"}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate("/kr/profile/"+data.summonerName)
+                            }}>
                                 {data.summonerName}
                             </Typography>
                         </Box>
@@ -237,7 +245,7 @@ const RankingInfo = ({data,ranking}) => {
 
 const RankingPage = () => {
     const [data, setData] = useState();
-
+    const navigate = useNavigate();
     const url = '/api/Ranking';
     
     useEffect(() => {
@@ -283,7 +291,7 @@ const RankingPage = () => {
                         인기랭킹
                     </Typography>
                 </Stack>
-                <RankingInfo data={data} ranking={ranking}></RankingInfo>
+                <RankingInfo data={data} ranking={ranking} navigate={navigate}></RankingInfo>
             </Container>
         </Box>
     );

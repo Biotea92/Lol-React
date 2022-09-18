@@ -1,8 +1,8 @@
 import React , {useState, useEffect, forwardRef, useImperativeHandle} from "react";
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate } from 'react-router-dom';
 import ResponsiveAppBar from "../components/ResponsiveAppbar";
 import Container from '@mui/material/Container';
-import { Box ,Typography } from '@mui/material';
+import { Box ,IconButton,Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { common } from '@mui/material/colors';
 import Button from '@mui/material/Button';
 import { ResponsivePie } from '@nivo/pie';
-import { ResponsiveBar } from '@nivo/bar'
+import { ResponsiveBar } from '@nivo/bar';
 import Avatar from '@mui/material/Avatar';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -27,8 +27,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Badge from '@mui/material/Badge';
 import Tooltip from '@mui/material/Tooltip';
-import { ResponsiveBullet } from '@nivo/bullet'
+import { ResponsiveBullet } from '@nivo/bullet';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import { ResponsiveLine } from '@nivo/line';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const winColor = "#EAF3FD";
 const looseColor = "#FEEEED";
@@ -860,8 +864,11 @@ const MatchCatecory = ({copyData, setData, SearchInit, data, gameCatecory, setGa
                                 <MostChampion/>
                                 <MostLine/>
                             </Stack>
-                          : <Box>
-                            {gameCatecory} 데이터가 없습니다.
+                          : <Box textAlign={"center"} sx={{width:"100%"}}>
+                                <Stack direction={"row"}>
+                                    <ErrorOutlineIcon sx={{fontSize:100}}></ErrorOutlineIcon>
+                                    <Typography fontSize={70} fontWeight={"bold"}>{gameCatecory} 데이터가 없습니다.</Typography>
+                                </Stack>
                             </Box>
                         }
                     </StyledBox3>
@@ -871,8 +878,9 @@ const MatchCatecory = ({copyData, setData, SearchInit, data, gameCatecory, setGa
     )
 }
 
-const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
-    
+const MatchList = ({data, isShowTimeLine, setIsShowTimeLine , SearchInit}) => {
+    const navigate = useNavigate();
+
     const StyledBox = styled(Box)(({ theme }) => ({
         position: 'relative',
         display: 'flex',
@@ -949,12 +957,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
 
             if ( data.target.win === true ) {
                 return (
-                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:winColor}} id={data.matchId} 
-                    onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.bluePuuid, data.redPuuid );
-                        isShowTimeLine[index] = !isShowTimeLine[index]
-                        setIsShowTimeLine(isShowTimeLine)
-                    }}> 
+                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:winColor}} id={data.matchId} > 
                         <GameMode>
                             <Typography fontWeight={"bold"} fontSize={"13px"}>
                                 {data.queue}
@@ -997,7 +1000,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.TOP.summonerName} src={data.blue.TOP.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.TOP.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.TOP.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.TOP.summonerName}
                                                 </Typography>
                                             }>
@@ -1009,7 +1012,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.JUNGLE.summonerName} src={data.blue.JUNGLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.JUNGLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.JUNGLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.JUNGLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1021,7 +1024,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.MIDDLE.summonerName} src={data.blue.MIDDLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.MIDDLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.MIDDLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.MIDDLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1033,7 +1036,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.BOTTOM.summonerName} src={data.blue.BOTTOM.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.BOTTOM.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.BOTTOM.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.BOTTOM.summonerName}
                                                 </Typography>
                                             }>
@@ -1045,7 +1048,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.UTILITY.summonerName} src={data.blue.UTILITY.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.UTILITY.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.UTILITY.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.UTILITY.summonerName}
                                                 </Typography>
                                             }>
@@ -1059,7 +1062,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.TOP.summonerName} src={data.red.TOP.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.TOP.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.TOP.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.TOP.summonerName }
                                                 </Typography>
                                             }>
@@ -1071,7 +1074,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.JUNGLE.summonerName} src={data.red.JUNGLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.JUNGLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.JUNGLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.JUNGLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1083,7 +1086,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.MIDDLE.summonerName} src={data.red.MIDDLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.MIDDLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.MIDDLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.MIDDLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1095,7 +1098,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.BOTTOM.summonerName} src={data.red.BOTTOM.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.BOTTOM.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.BOTTOM.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.BOTTOM.summonerName}
                                                 </Typography>
                                             }>
@@ -1107,7 +1110,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.UTILITY.summonerName} src={data.red.UTILITY.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.UTILITY.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.UTILITY.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.UTILITY.summonerName}
                                                 </Typography>
                                             }>
@@ -1125,7 +1128,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                                 <img alt={data.summonerName} src={data.championUrl} height="18px" sx={{display: 'flex'}}/>
                                                 <ListItemText
                                                 primary={
-                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.summonerName} variant="body2" color="black">
+                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.summonerName);}} href={"#"} variant="body2" color="black">
                                                         &nbsp;{data.summonerName}
                                                     </Typography>
                                                 }>
@@ -1141,7 +1144,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                                 <img alt={data.summonerName} src={data.championUrl} height="18px" sx={{display: 'flex'}}/>
                                                 <ListItemText
                                                 primary={
-                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.summonerName} variant="body2" color="black">
+                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.summonerName);}} href={"#"} variant="body2" color="black">
                                                         &nbsp;{data.summonerName}
                                                     </Typography>
                                                 }>
@@ -1152,16 +1155,22 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                 </RedTeam>
                                 </div>
                         }
+                        <Box position={"absolute"} right="2%" top="35%">
+                            <IconButton size="large" onClick={(e) => {
+                                ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.bluePuuid, data.redPuuid  );
+                                isShowTimeLine[index] = !isShowTimeLine[index]
+                                setIsShowTimeLine(isShowTimeLine)
+                                console.log(isShowTimeLine[index]);
+                            }}>
+                                
+                                {isShowTimeLine[index]===true ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                            </IconButton>
+                        </Box>
                     </StyledBox>
                 )
             } else if ( data.target.win === false ) {
                 return (
-                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:looseColor}} id={data.matchId} 
-                    onClick={(e) => {
-                        ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId, data.target.team, data.target.win , data.bluePuuid, data.redPuuid   );
-                        isShowTimeLine[index] = !isShowTimeLine[index]
-                        setIsShowTimeLine(isShowTimeLine)
-                    }}> 
+                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:looseColor}} id={data.matchId} > 
                         <GameMode>
                             <Typography fontWeight={"bold"} fontSize={"13px"}>
                                 {data.queue}
@@ -1204,7 +1213,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.TOP.summonerName} src={data.blue.TOP.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.TOP.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.TOP.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.TOP.summonerName}
                                                 </Typography>
                                             }>
@@ -1216,7 +1225,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.JUNGLE.summonerName} src={data.blue.JUNGLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.JUNGLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.JUNGLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.JUNGLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1228,7 +1237,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.MIDDLE.summonerName} src={data.blue.MIDDLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.MIDDLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.MIDDLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.MIDDLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1240,7 +1249,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.BOTTOM.summonerName} src={data.blue.BOTTOM.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.BOTTOM.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.BOTTOM.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.BOTTOM.summonerName}
                                                 </Typography>
                                             }>
@@ -1252,7 +1261,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.blue.UTILITY.summonerName} src={data.blue.UTILITY.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.blue.UTILITY.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.blue.UTILITY.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.blue.UTILITY.summonerName}
                                                 </Typography>
                                             }>
@@ -1266,7 +1275,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.TOP.summonerName} src={data.red.TOP.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.TOP.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.TOP.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.TOP.summonerName }
                                                 </Typography>
                                             }>
@@ -1278,7 +1287,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.JUNGLE.summonerName} src={data.red.JUNGLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.JUNGLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.JUNGLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.JUNGLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1290,7 +1299,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.MIDDLE.summonerName} src={data.red.MIDDLE.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.MIDDLE.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.MIDDLE.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.MIDDLE.summonerName}
                                                 </Typography>
                                             }>
@@ -1302,7 +1311,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.BOTTOM.summonerName} src={data.red.BOTTOM.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.BOTTOM.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.BOTTOM.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.BOTTOM.summonerName}
                                                 </Typography>
                                             }>
@@ -1314,7 +1323,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                             <img alt={data.red.UTILITY.summonerName} src={data.red.UTILITY.championUrl} height="18px" sx={{display: 'flex'}}/>
                                             <ListItemText
                                             primary={
-                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.red.UTILITY.summonerName} variant="body2" color="black">
+                                                <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.red.UTILITY.summonerName);}} href={"#"} variant="body2" color="black">
                                                     &nbsp;{data.red.UTILITY.summonerName}
                                                 </Typography>
                                             }>
@@ -1332,7 +1341,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                                 <img alt={data.summonerName} src={data.championUrl} height="18px" sx={{display: 'flex'}}/>
                                                 <ListItemText
                                                 primary={
-                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.summonerName} variant="body2" color="black">
+                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => {SearchInit(); navigate("/kr/profile/"+data.summonerName);}} href={"#"} variant="body2" color="black">
                                                         &nbsp;{data.summonerName}
                                                     </Typography>
                                                 }>
@@ -1348,7 +1357,7 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                                 <img alt={data.summonerName} src={data.championUrl} height="18px" sx={{display: 'flex'}}/>
                                                 <ListItemText
                                                 primary={
-                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+data.summonerName} variant="body2" color="black">
+                                                    <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" onClick={(e) => { SearchInit(); navigate("/kr/profile/"+data.summonerName);}} href={"#"} variant="body2" color="black">
                                                         &nbsp;{data.summonerName}
                                                     </Typography>
                                                 }>
@@ -1359,16 +1368,21 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                 </RedTeam>
                                 </div>
                         }
+                        <Box position={"absolute"} right="2%" top="35%">
+                            <IconButton size="large" onClick={(e) => {
+                                ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.bluePuuid, data.redPuuid  );
+                                isShowTimeLine[index] = !isShowTimeLine[index]
+                                setIsShowTimeLine(isShowTimeLine)
+                                console.log(isShowTimeLine[index]);
+                            }}>
+                                {isShowTimeLine[index]===true ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                            </IconButton>
+                        </Box>
                     </StyledBox>
                 )
             } else {
                 return (
-                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:resetColor}} id={data.matchId} 
-                        onClick={(e) => {
-                            ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.bluePuuid, data.redPuuid  );
-                            isShowTimeLine[index] = !isShowTimeLine[index]
-                            setIsShowTimeLine(isShowTimeLine)
-                        }}>
+                    <StyledBox key={index} mt={1} sx={{color:"black",backgroundColor:resetColor}} id={data.matchId}>
                         <GameMode>
                             <Typography fontWeight={"bold"} fontSize={"13px"}>
                                 {data.queue}
@@ -1409,7 +1423,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.blue.TOP !== undefined ? data.blue.TOP.summonerName : data.blue.escape.summonerName} src={data.blue.TOP !== undefined ? data.blue.TOP.championUrl : data.blue.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.blue.TOP !== undefined ? data.blue.TOP.summonerName : data.blue.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.blue.TOP !== undefined) {
+                                                navigate("/kr/profile/"+data.blue.TOP.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.blue.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.blue.TOP !== undefined ? data.blue.TOP.summonerName : data.blue.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1421,7 +1445,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.blue.JUNGLE !== undefined ? data.blue.JUNGLE.summonerName : data.blue.escape.summonerName} src={data.blue.JUNGLE !== undefined ? data.blue.JUNGLE.championUrl : data.blue.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.blue.JUNGLE !== undefined ? data.blue.JUNGLE.summonerName : data.blue.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.blue.JUNGLE !== undefined) {
+                                                navigate("/kr/profile/"+data.blue.JUNGLE.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.blue.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.blue.JUNGLE !== undefined ? data.blue.JUNGLE.summonerName : data.blue.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1433,7 +1467,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.blue.MIDDLE !== undefined ? data.blue.MIDDLE.summonerName : data.blue.escape.summonerName} src={data.blue.MIDDLE !== undefined ? data.blue.MIDDLE.championUrl : data.blue.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.blue.MIDDLE !== undefined ? data.blue.MIDDLE.summonerName : data.blue.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.blue.MIDDLE !== undefined) {
+                                                navigate("/kr/profile/"+data.blue.MIDDLE.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.blue.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.blue.MIDDLE !== undefined ? data.blue.MIDDLE.summonerName : data.blue.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1445,7 +1489,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.blue.BOTTOM !== undefined ? data.blue.BOTTOM.summonerName : data.blue.escape.summonerName} src={data.blue.BOTTOM !== undefined ? data.blue.BOTTOM.championUrl : data.blue.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.blue.BOTTOM !== undefined ? data.blue.BOTTOM.summonName : data.blue.escape.summonName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.blue.BOTTOM !== undefined) {
+                                                navigate("/kr/profile/"+data.blue.BOTTOM.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.blue.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.blue.BOTTOM !== undefined ? data.blue.BOTTOM.summonerName : data.blue.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1457,7 +1511,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.blue.UTILITY !== undefined ? data.blue.UTILITY.summonerName : data.blue.escape.summonerName} src={data.blue.UTILITY !== undefined ? data.blue.UTILITY.championUrl : data.blue.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.blue.UTILITY !== undefined ? data.blue.UTILITY.summonerName : data.blue.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.blue.UTILITY !== undefined) {
+                                                navigate("/kr/profile/"+data.blue.UTILITY.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.blue.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.blue.UTILITY !== undefined ? data.blue.UTILITY.summonerName : data.blue.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1471,7 +1535,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.red.TOP !== undefined ? data.red.TOP.summonerName : data.red.escape.summonerName} src={data.red.TOP !== undefined ? data.red.TOP.championUrl : data.red.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.red.TOP !== undefined ? data.red.TOP.summonerName : data.red.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.red.TOP !== undefined) {
+                                                navigate("/kr/profile/"+data.red.TOP.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.red.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.red.TOP !== undefined ? data.red.TOP.summonerName : data.red.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1483,7 +1557,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.red.JUNGLE !== undefined ? data.red.JUNGLE.summonerName : data.red.escape.summonerName} src={data.red.JUNGLE !== undefined ? data.red.JUNGLE.championUrl : data.red.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.red.JUNGLE !== undefined ? data.red.JUNGLE.summonerName : data.red.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.red.JUNGLE !== undefined) {
+                                                navigate("/kr/profile/"+data.red.JUNGLE.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.red.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.red.JUNGLE !== undefined ? data.red.JUNGLE.summonerName : data.red.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1495,7 +1579,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.red.MIDDLE !== undefined ? data.red.MIDDLE.summonerName : data.red.escape.summonerName} src={data.red.MIDDLE !== undefined ? data.red.MIDDLE.championUrl : data.red.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.red.MIDDLE !== undefined ? data.red.MIDDLE.summonerName : data.red.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.red.MIDDLE !== undefined) {
+                                                navigate("/kr/profile/"+data.red.MIDDLE.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.red.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.red.MIDDLE !== undefined ? data.red.MIDDLE.summonerName : data.red.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1507,7 +1601,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.red.BOTTOM !== undefined ? data.red.BOTTOM.summonerName : data.red.escape.summonerName} src={data.red.BOTTOM !== undefined ? data.red.BOTTOM.championUrl : data.red.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.red.BOTTOM !== undefined ? data.red.BOTTOM.summonerName : data.red.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.red.BOTTOM !== undefined) {
+                                                navigate("/kr/profile/"+data.red.BOTTOM.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.red.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.red.BOTTOM !== undefined ? data.red.BOTTOM.summonerName : data.red.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1519,7 +1623,17 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                     <img alt={data.red.UTILITY !== undefined ? data.red.UTILITY.summonerName : data.red.escape.summonerName} src={data.red.UTILITY !== undefined ? data.red.UTILITY.championUrl : data.red.escape.championUrl} height="18px" sx={{display: 'flex'}}/>
                                     <ListItemText
                                     primary={
-                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" href={"/kr/profile/"+(data.red.UTILITY !== undefined ? data.red.UTILITY.summonerName : data.red.escape.summonerName)} variant="body2" color="black">
+                                        <Typography sx={{display: 'flex', textDecoration:"none"}} fontSize="10px" component="a" 
+                                        href={"#"}
+                                        onClick={() => {
+                                            SearchInit();
+                                            if(data.red.UTILITY !== undefined) {
+                                                navigate("/kr/profile/"+data.red.UTILITY.summonerName);
+                                            }else{
+                                                navigate("/kr/profile/"+data.red.escape.summonerName);
+                                            }
+                                        }}
+                                        variant="body2" color="black">
                                             &nbsp;{data.red.UTILITY !== undefined ? data.red.UTILITY.summonerName : data.red.escape.summonerName}
                                         </Typography>
                                     }>
@@ -1527,8 +1641,18 @@ const MatchList = ({data, isShowTimeLine, setIsShowTimeLine}) => {
                                 </ListItem>
                             </List>
                         </RedTeam>
+                        <Box position={"absolute"} right="2%" top="35%">
+                            <IconButton size="large" onClick={(e) => {
+                                ShowTimeline(data.matchId, isShowTimeLine[index], puuid , data.target.championId , data.target.team , data.target.win , data.bluePuuid, data.redPuuid  );
+                                isShowTimeLine[index] = !isShowTimeLine[index]
+                                setIsShowTimeLine(isShowTimeLine)
+                                console.log(isShowTimeLine[index]);
+                            }}>
+                                
+                                {isShowTimeLine[index]===true ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                            </IconButton>
+                        </Box>
                     </StyledBox>
-                    
                 )
             }
         })
@@ -1569,10 +1693,8 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
             }
         }
 
-        console.log(url);
         const timeLineData = await fetch(url).then(response => response.json());
 
-        console.log(timeLineData);
 
         const itemBuild = timeLineData.itemBuild;
         const skillBuild = timeLineData.skillBuild;
@@ -1582,6 +1704,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
         const redTotal = timeLineData.matchInfo.redTotal;
         const winTeam = timeLineData.matchInfo.win;
         const maxDamage = timeLineData.matchInfo.maxDamage
+        const teamGold = timeLineData.teamGold;
 
         const grayImg = "https://firebasestorage.googleapis.com/v0/b/bestcosmetics-5136f.appspot.com/o/lol%2FgrayImg.png?alt=media&token=9fb66610-ab1c-4617-80f1-3d774feb4b9d";
         
@@ -1650,11 +1773,10 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                                         <Typography 
                                             variant="h6"
                                             color="black"
-                                            component="a"
+                                            component="span"
                                             fontSize={12}
                                             fontWeight={"bold"}
-                                            sx={{textDecoration:"none", mt:1, ml:1}}
-                                            href={"/kr/profile/"+data.summonerName}>
+                                            sx={{textDecoration:"none", mt:1, ml:1}}>
                                                 {data.summonerName}
                                         </Typography>
                                     </Stack>
@@ -1880,7 +2002,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                     itemBuildList.map((data, index1) => {
 
                         return (
-                            <Box key={index1} sx={{display:"inline"}}>
+                            <Box key={index1} ml={3} sx={{display:"inline"}}>
                                 {
                                     data.map((data1, index2) => {
                                         if(data1.type === "구매" ) {
@@ -1905,18 +2027,17 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
             }
 
             const Skill = () => {
-                console.log(skillBuild);
                 return(
-                    <Box>
+                    <Box ml={3}>
                         {
                             skillBuild.map((data, index) => {
 
                                 return (
                                     <Box key={index} position={"relative"} sx={{display:"inline"}} ml={1}>
                                         <Typography fontWeight={"bold"} color="white" position={"absolute"} right={2} bottom={2} sx={{display:"inline", ml:{},mr:{}}}>
-                                            {data.skillSlot === 1 ? "q" : data.skillSlot === 2 ? "w" : data.skillSlot === 3 ? "e" : data.skillSlot === 4 ? "r" : null}
+                                            {data.skillSlot === 1 ? "Q" : data.skillSlot === 2 ? "W" : data.skillSlot === 3 ? "E" : data.skillSlot === 4 ? "R" : null}
                                         </Typography>
-                                        <Tooltip key={index} title={"하이"}>
+                                        <Tooltip key={index} title={data.skillName}>
                                             <img alt={data.skillSlot} src={data.skillImg} sx={{width:20, height:20}}/>
                                         </Tooltip>
                                     </Box>
@@ -1938,6 +2059,112 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
             );
         }
 
+        const Chart = () => {
+
+            const ChartData = []
+
+            const winGoldList = [];
+            const lossGoldList = [];
+
+            for (let i = 0; i < teamGold.win.length ; i++ ) {
+                const winGold = {"x" : i+"분" , "y" : teamGold.win[i]};
+                winGoldList.push(winGold);
+
+                const lossGold = {"x" : i+"분", "y" : teamGold.lose[i]};
+                lossGoldList.push(lossGold);
+            }
+
+            const smallChart1 = {
+                "id" : "승리",
+                "color" : "hsl(155, 70%, 50%)",
+                "data" : winGoldList
+            }
+
+            const smallChart2 = {
+                "id" : "패배",
+                "color" : "hsl(155, 70%, 50%)",
+                "data" : lossGoldList
+            }
+            ChartData.push(smallChart1);
+            ChartData.push(smallChart2);
+            
+            
+
+            return (
+                <Box sx={{width:'99%', height: 300}}>
+                    <ResponsiveLine
+                        data={ChartData}
+                        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                        xScale={{ type: 'point' }}
+                        yScale={{
+                            type: 'linear',
+                            min: 'auto',
+                            max: 'auto',
+                            stacked: false,
+                            reverse: false
+                        }}
+                        yFormat=" >-.2f"
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            orient: 'bottom',
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: '시간당 팀별 전체 골드 획득량',
+                            legendOffset: 36,
+                            legendPosition: 'middle'
+                        }}
+                        axisLeft={{
+                            orient: 'left',
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: '',
+                            legendOffset: -40,
+                            legendPosition: 'middle'
+                        }}
+                        enableGridX={false}
+                        colors={{ scheme: 'category10' }}
+                        enablePoints={false}
+                        pointSize={10}
+                        pointColor="black"
+                        pointBorderWidth={2}
+                        pointBorderColor="black"
+                        pointLabelYOffset={-12}
+                        enableArea={true}
+                        enableCrosshair={false}
+                        useMesh={true}
+                        legends={[
+                            {
+                                anchor: 'bottom-right',
+                                direction: 'column',
+                                justify: false,
+                                translateX: 113,
+                                translateY: 0,
+                                itemWidth: 100,
+                                itemHeight: 20,
+                                itemsSpacing: 4,
+                                symbolSize: 20,
+                                symbolShape: 'circle',
+                                itemDirection: 'left-to-right',
+                                itemTextColor: '#777',
+                                effects: [
+                                    {
+                                        on: 'hover',
+                                        style: {
+                                            itemBackground: 'rgba(0, 0, 0, .03)',
+                                            itemOpacity: 1
+                                        }
+                                    }
+                                ]
+                            }
+                        ]}
+                    />
+                </Box>
+            )
+        }
+
         const root = ReactDOM.createRoot(parent.children[index+1]);
         root.render(
             <Box>
@@ -1947,6 +2174,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                     <React.Fragment >
                         <div style={{display:"block"}} id={`${matchId}timeLine1`}>
                             <BasicTable team={"blue"}/>
+                            <Chart></Chart>
                             <Total team={"blue"} ></Total>
                             <BasicTable team={"red"}/>
                         </div>
@@ -1959,6 +2187,7 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
                     <React.Fragment >
                         <div style={{display:"block"}} id={`${matchId}timeLine1`}>
                             <BasicTable team={"red"}/>
+                            <Chart></Chart>
                             <Total team={"red"}></Total>
                             <BasicTable team={"blue"}/>
                         </div>
@@ -2180,8 +2409,6 @@ const Profile = forwardRef((props, ref) => {
             setCopyData({...data});
       }).catch(err => console.log(err));
     },[url])
-
-    console.log(data);
     
     function SearchInit() {
         const isShowTimeLineList2 = [,,,,,,,,,,,,,,,,,,,,];
@@ -2210,7 +2437,7 @@ const Profile = forwardRef((props, ref) => {
                         <MatchCatecory copyData={copyData} setData={setData} SearchInit={SearchInit} data={data} gameCatecory={gameCatecory} setGameCatecory={setGameCatecory}/>
 
                         {data.info.length !== 0
-                           ? <MatchList data={data} isShowTimeLine={isShowTimeLine} setIsShowTimeLine={setIsShowTimeLine} />
+                           ? <MatchList data={data} isShowTimeLine={isShowTimeLine} setIsShowTimeLine={setIsShowTimeLine} SearchInit={SearchInit}/>
                            : null
                         }
                     
