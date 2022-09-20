@@ -1695,7 +1695,6 @@ async function ShowTimeline(matchId, isShowTimeLine, puuid, championId, targetTe
 
         const timeLineData = await fetch(url).then(response => response.json());
 
-
         const itemBuild = timeLineData.itemBuild;
         const skillBuild = timeLineData.skillBuild;
         const blue = timeLineData.matchInfo.blue;
